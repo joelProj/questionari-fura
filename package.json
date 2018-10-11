@@ -1,0 +1,17 @@
+{
+    "name": "questionari_fura",
+    "version": "0.0.1",
+    "description": "API REST Questionari Fura",
+    "keywords": [
+        "node",
+        "La fura dels Baus"
+    ],
+    "author": "Joel Moreno",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"error Test not found\" "
+    },
+    "dependencies": {
+        "express": "4.16.4"
+    }
+}
