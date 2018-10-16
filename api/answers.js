@@ -9,8 +9,8 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    console.log("REQ: ", req);
-    console.log("BODY: ", req.body.hasOwnProperty('fname'));
+    console.log(req.body);
+    //console.log("REQ: ", req);
     res.status(200).json({
         message: "post to answers"
     });
