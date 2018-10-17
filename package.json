@@ -12,6 +12,7 @@
         "test": "echo \"error Test not found\" "
     },
     "dependencies": {
-        "express": "4.16.4"
+        "express": "4.16.4",
+        "pg": "7.5.0"
     }
 }
