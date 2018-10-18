@@ -1,3 +1,5 @@
+var HTML;
+
 var questionID;
 
 function GetURLParameter(sParam)
@@ -30,28 +32,6 @@ function performGetRequestText(id) {
     });   
 }
 
-function writeQuestionTitle(id){
-    var titleDiv = document.getElementById('question');
-    
-    titleDiv.innerHTML = '<h3>Pregunta ' + id + '</h3>'
-}
-
-function writeQuestionText(text){
-    var titleDiv = document.getElementById('question');
-    
-    titleDiv.innerHTML += '<p>' + text + '<p>'+
-                          '<br><br>';
-}
-function writeOptionsButton(options){
-    var form = document.getElementById('formButtons');
-    
-    form.innerHTML = "";
-    
-    for i in options:
-        form.innerHTML+= "<input type=\"button\" id=\"button\" onclick=\"performPOSTrequest()\" value=\"" + i + "\">"
-    
-}
-
 function performPostRequest() {
     var value = document.getElementById('button').value;
     
@@ -67,13 +47,69 @@ function performPostRequest() {
     });
 }
 
-function main(){
-    questionID = GetURLParameter('id');
-    writeQuestionTitle(questionID);
+function generateHeader(){
+    HTML += "   <!DOCTYPE HTML>     \
+                <html lang=\"es\">  \
+                <head>              \
+                <title>Questionari Fura</title> \
+                <meta charset=\"UTF-8\"> \
+                <meta name=\"description\" content=\"Questionari per l'espectacle\"> \
+                </head> \
+                <body> \
+                <script src=\"URL_id.js\"></script> \
+                <div class=\"barra-lateral\" id=\"question\">";
+}
+
+function generateQuestionTitle(id){
+    HTML += "<h3>Pregunta " + id + "</h3>"
+}
+
+function generateQuestionText(text){
+    HTML += "<p>" + text + "<p><br><br>";
+}
+
+function generateBody(){
+    HTML += "   </div> \
+                <script> \
+                    main() \
+                </script> \
+                \
+                <table> \
+                    <form action=\"http://localhost:3000/answer\" method=\"post\" id=\"formButtons\">";
+}
+
+function generateOptionsButton(options){
+    for i in options:
+        HTML+= "<input type=\"button\" id=\"button\" onclick=\"performPOSTrequest()\" value=\"" + i + "\">"
+}
+
+function generateEndHTML(){
+    HTML += "   </form> \
+                </table> \
+                \
+                <br> \
+                <br> \
+                <br> \
+                </form> \
+                </body> \
+                </html>"
+}
+
+
+function generateWebpage(question){
+    generateHeader();
     
-    var parameters = performGetRequestText(questionID);
-    writeQuestionText(parameters[0]);
-    writeOptionsButton(parameters[2]);
+    //questionID = getURLParameter('id');
+    generateQuestionTitle(question.id);
+    
+    generateQuestionText(question.text);
+    
+    generateBody();
+    generateOptionsButton(question.options);
+    
+    generateEndHTML();
+    
+    return HMTL;
 }
 
 function generateSuccessHTMLOutput(response) {
