@@ -1,5 +1,5 @@
 const mongoose = require('mongoose'),
-    ObjectId = Schema.ObjectId;
+    ObjectId = mongoose.Schema.ObjectId;
 
 const Schema = mongoose.model('Answer', mongoose.Schema({
     
