@@ -13,9 +13,13 @@
     <br>
     <br>
   </div>
+  <script>
+    main()
+  </script>
+  
   <table>
-    <form action="http://localhost:3000/answer" method="post">
-      <input type="button" name='answerButton' value="Yes">
+    <form action="http://localhost:3000/answer" method="post" id="formButtons">
+      <input type="button" id='button' value="Yes">
       <input type="button" id='button' onclick='performPOSTrequest()' value="No">
     </form> 
 </table>  

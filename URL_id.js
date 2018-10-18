@@ -1,3 +1,5 @@
+var questionID;
+
 function GetURLParameter(sParam)
 {
     var sPageURL = window.location.search.substring(1);
@@ -19,19 +21,13 @@ function performGetRequestText(id) {
         }
     })
     .then(function (response) {
-        return generateSuccessHTMLOutput(response);
+        return [generateSuccessHTMLOutput(response).text, 
+                generateSuccessHTMLOutput(response).group, 
+                generateSuccessHTMLOutput(response).options];
     })
     .catch(function (error) {
         return generateErrorHTMLOutput(error);
     });   
-}
-
-function generateSuccessHTMLOutput(response) {
-  return  response.data;
-}
-
-function generateErrorHTMLOutput(error) {
-  return  error.message;
 }
 
 function writeQuestionTitle(id){
@@ -46,15 +42,21 @@ function writeQuestionText(text){
     titleDiv.innerHTML += '<p>' + text + '<p>'+
                           '<br><br>';
 }
+function writeOptionsButton(options){
+    var form = document.getElementById('formButtons');
+    
+    form.innerHTML = "";
+    
+    for i in options:
+        form.innerHTML+= "<input type=\"button\" id=\"button\" onclick=\"performPOSTrequest()\" value=\"" + i + "\">"
+    
+}
 
-function performPOSTrequest(){
-    document.getElementById('todoInputForm').addEventListener('submit', performPostRequest);
-
-function performPostRequest(id, e) {
+function performPostRequest() {
     var value = document.getElementById('button').value;
     
     axios.post('http://localhost:3000/answers', {
-        questionID: id,
+        id: questionID,
         completed: false
     })
     .then(function (response) {
@@ -63,18 +65,22 @@ function performPostRequest(id, e) {
     .catch(function (error) {
         resultElement.innerHTML = generateErrorHTMLOutput(error);
     });
-    
-    e.preventDefault();
-
 }
 
 function main(){
-    var id = GetURLParameter('id');
-    writeQuestionTitle(id);
+    questionID = GetURLParameter('id');
+    writeQuestionTitle(questionID);
     
-    var text = performGetRequestText(id);
-    writeQuestionText(text);
-    
-    
+    var parameters = performGetRequestText(questionID);
+    writeQuestionText(parameters[0]);
+    writeOptionsButton(parameters[2]);
+}
+
+function generateSuccessHTMLOutput(response) {
+  return  response.data;
+}
+
+function generateErrorHTMLOutput(error) {
+  return  error.message;
 }
 
