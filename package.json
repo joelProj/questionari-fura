@@ -15,6 +15,7 @@
         "express": "4.16.4",
         "pg": "7.5.0",
         "mongoose": "5.3.4",
-        "bluebird": "3.5.2"
+        "bluebird": "3.5.2",
+        "axios": "0.18.0"
     }
 }

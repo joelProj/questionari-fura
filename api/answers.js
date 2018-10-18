@@ -16,8 +16,11 @@ router.post('/', async (req, res, next) => {
 
     //get del grup a partir del id de pregunta
     //req.body.group = await Question.findById(req.body.id).select('group').lean().exec();
-    await Answer.create(req.body);
-    return;
+    //await Answer.create(req.body);
+    console.log("BODY: ",req.body);
+    res.status(200).json({
+        message: "get to answers"
+    });
 });
 
 //TODO

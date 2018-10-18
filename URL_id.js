@@ -1,43 +1,45 @@
-var HTML;
+var HTML = "";
+var axios = require('axios');
 
 var questionID;
 
-function GetURLParameter(sParam)
-{
-    var sPageURL = window.location.search.substring(1);
-    var sURLVariables = sPageURL.split('&');
-    for (var i = 0; i < sURLVariables.length; i++) 
-    {
-        var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam) 
-        {
-            return sParameterName[1];
-        }
-    }
-}​
+// function GetURLParameter(sParam)
+// {
+//     var sPageURL = window.location.search.substring(1);
+//     var sURLVariables = sPageURL.split('&');
+//     for (var i = 0; i < sURLVariables.length; i++) 
+//     {
+//         var sParameterName = sURLVariables[i].split('=');
+//         if (sParameterName[0] == sParam) 
+//         {
+//             return sParameterName[1];
+//         }
+//     }
 
-function performGetRequestText(id) {
-    axios.get('http://localhost:3000/questions', {
-        params: {
-            id: id
-        }
-    })
-    .then(function (response) {
-        return [generateSuccessHTMLOutput(response).text, 
-                generateSuccessHTMLOutput(response).group, 
-                generateSuccessHTMLOutput(response).options];
-    })
-    .catch(function (error) {
-        return generateErrorHTMLOutput(error);
-    });   
-}
+// }​
 
-function performPostRequest() {
-    var value = document.getElementById('button').value;
-    
+// function performGetRequestText(id) {
+//     axios.get('http://localhost:3000/questions', {
+//         params: {
+//             id: id
+//         }
+//     })
+//     .then(function (response) {
+//         return [generateSuccessHTMLOutput(response).text, 
+//                 generateSuccessHTMLOutput(response).group, 
+//                 generateSuccessHTMLOutput(response).options];
+//     })
+//     .catch(function (error) {
+//         return generateErrorHTMLOutput(error);
+//     });   
+// }
+
+function performPostRequest(val) {    
+    console.log("VALUE: ",val);
     axios.post('http://localhost:3000/answers', {
         id: questionID,
-        completed: false
+        completed: false,
+        value: val
     })
     .then(function (response) {
         resultElement.innerHTML = generateSuccessHTMLOutput(response);
@@ -48,7 +50,7 @@ function performPostRequest() {
 }
 
 function generateHeader(){
-    HTML += "   <!DOCTYPE HTML>     \
+    HTML += `   <!DOCTYPE HTML>     \
                 <html lang=\"es\">  \
                 <head>              \
                 <title>Questionari Fura</title> \
@@ -56,8 +58,7 @@ function generateHeader(){
                 <meta name=\"description\" content=\"Questionari per l'espectacle\"> \
                 </head> \
                 <body> \
-                <script src=\"URL_id.js\"></script> \
-                <div class=\"barra-lateral\" id=\"question\">";
+                <div class=\"barra-lateral\" id=\"question\">`;
 }
 
 function generateQuestionTitle(id){
@@ -70,29 +71,36 @@ function generateQuestionText(text){
 
 function generateBody(){
     HTML += "   </div> \
-                <script> \
-                    main() \
-                </script> \
                 \
                 <table> \
                     <form action=\"http://localhost:3000/answer\" method=\"post\" id=\"formButtons\">";
 }
 
 function generateOptionsButton(options){
-    for i in options:
-        HTML+= "<input type=\"button\" id=\"button\" onclick=\"performPOSTrequest()\" value=\"" + i + "\">"
+    for (var i in options)
+        HTML+= `<input type="button" id="button" onclick="performPostRequest('${options[i]}')" value=${options[i]}>`
 }
 
 function generateEndHTML(){
-    HTML += "   </form> \
+    HTML += `   </form> 
                 </table> \
                 \
                 <br> \
                 <br> \
                 <br> \
                 </form> \
+                <script>
+                function performPostRequest(val) {    
+                    console.log("VALUE: ",val);
+                    axios.post('http://localhost:3000/answers', {
+                        id: questionID,
+                        completed: false,
+                        value: val
+                    });
+                }
+                </script>\
                 </body> \
-                </html>"
+                </html>`
 }
 
 
@@ -109,7 +117,7 @@ function generateWebpage(question){
     
     generateEndHTML();
     
-    return HMTL;
+    return HTML;
 }
 
 function generateSuccessHTMLOutput(response) {
@@ -118,5 +126,9 @@ function generateSuccessHTMLOutput(response) {
 
 function generateErrorHTMLOutput(error) {
   return  error.message;
+}
+
+module.exports = {
+    generateWebpage
 }
 
