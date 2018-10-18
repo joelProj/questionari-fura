@@ -6,7 +6,8 @@
   <meta name="description" content="Descripción de la página…">
 </head>
 <body>
-  <div class=”barra-lateral”>
+  <script src="URL_id.js"></script>
+  <div class=”barra-lateral” id="question">
     <h3>Pregunta 1</h3>
     <p>Matarías a Fulanito?</p>
     <br>
@@ -14,8 +15,8 @@
   </div>
   <table>
     <form action="http://localhost:3000/answer" method="post">
-      <input type="submit" name='answerButton' value="Yes">
-      <input type="submit" name='answerButton' value="No">
+      <input type="button" name='answerButton' value="Yes">
+      <input type="button" id='button' onclick='performPOSTrequest()' value="No">
     </form> 
 </table>  
 
