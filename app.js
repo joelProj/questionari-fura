@@ -6,7 +6,8 @@ const answerRoutes = require('./api/answers');
 
 const bodyParser = require('body-parser');
 
-app.use(bodyParser.urlencoded( { extended:false }));
+app.use(bodyParser.urlencoded( { extended:true }));
+app.use(bodyParser.json());
 
 app.use('/question', questionRoutes);
 app.use('/answer', answerRoutes);

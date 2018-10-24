@@ -1,7 +1,4 @@
 var HTML = "";
-var axios = require('axios');
-
-var questionID;
 
 // function GetURLParameter(sParam)
 // {
@@ -34,7 +31,7 @@ var questionID;
 //     });   
 // }
 
-function performPostRequest(val) {    
+function performPostRequest(val) {   
     console.log("VALUE: ",val);
     axios.post('http://localhost:3000/answers', {
         id: questionID,
@@ -78,10 +75,11 @@ function generateBody(){
 
 function generateOptionsButton(options){
     for (var i in options)
-        HTML+= `<input type="button" id="button" onclick="performPostRequest('${options[i]}')" value=${options[i]}>`
+        HTML+= `<button type="button" id="button" onclick="performPostRequest('${options[i]}'); return false;" >${options[i]}</button>`
 }
 
-function generateEndHTML(){
+function generateEndHTML(questionID){
+    //console.log(questionID);
     HTML += `   </form> 
                 </table> \
                 \
@@ -89,14 +87,21 @@ function generateEndHTML(){
                 <br> \
                 <br> \
                 </form> \
+                <script src="https://unpkg.com/axios/dist/axios.min.js"></script> \
                 <script>
                 function performPostRequest(val) {    
                     console.log("VALUE: ",val);
-                    axios.post('http://localhost:3000/answers', {
-                        id: questionID,
+                    axios.post('http://localhost:3000/answer', {
+                        id: ${questionID},
                         completed: false,
                         value: val
-                    });
+                    }).then(function (response) {
+                        console.log(response);
+                      })
+                      .catch(function (error) {
+                        console.log(error);
+                      });
+                      //open(location, '_self').close();
                 }
                 </script>\
                 </body> \
@@ -105,9 +110,10 @@ function generateEndHTML(){
 
 
 function generateWebpage(question){
+    HTML = ""; //reset webpage in every get
     generateHeader();
-    
-    //questionID = getURLParameter('id');
+    //console.log(question.id)
+    questionID = question.id;
     generateQuestionTitle(question.id);
     
     generateQuestionText(question.text);
@@ -115,7 +121,7 @@ function generateWebpage(question){
     generateBody();
     generateOptionsButton(question.options);
     
-    generateEndHTML();
+    generateEndHTML(question.id);
     
     return HTML;
 }
