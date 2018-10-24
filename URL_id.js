@@ -92,8 +92,7 @@ function generateEndHTML(questionID){
                 function performPostRequest(val) {    
                     console.log("VALUE: ",val);
                     axios.post('http://localhost:3000/answer', {
-                        id: ${questionID},
-                        completed: false,
+                        id: "${questionID}",
                         value: val
                     }).then(function (response) {
                         console.log(response);
@@ -112,16 +111,14 @@ function generateEndHTML(questionID){
 function generateWebpage(question){
     HTML = ""; //reset webpage in every get
     generateHeader();
-    //console.log(question.id)
-    questionID = question.id;
-    generateQuestionTitle(question.id);
+    generateQuestionTitle(question.id_fura);
     
     generateQuestionText(question.text);
     
     generateBody();
     generateOptionsButton(question.options);
     
-    generateEndHTML(question.id);
+    generateEndHTML(question.id_fura);
     
     return HTML;
 }

@@ -32,7 +32,7 @@ async function connectDB(){
         db.on('connecting', onDbConnecting);
         db.on('error', console.error.bind(console, 'connection error:'));
         db.once('open', onDbConnected);
-        await mongoose.connect("mongodb://localhost/fura-testing");
+        await mongoose.connect("mongodb://localhost/DB-fura");
     }
     catch(err){
         console.log(err);
@@ -41,25 +41,3 @@ async function connectDB(){
 
 //START SERVER + DB
 startServer();
-
-
-
-
-
-
-// CREATE TABLE PREGUNTES (
-//     ID_PREGUNTA INTEGER NOT NULL,
-//     TEXTE VARCHAR(100) NOT NULL,
-//     GRUP CHAR(2)NOT NULL,
-//     ID_RESPOSTA INTEGER NOT NULL UNIQUE,
-//     FECHA DATETIME NOT NULL,
-//     PRIMARY KEY ID_PREGUNTA,
-//     FOREIGN KEY (ID_RESPOSTA) REFERENCES RESPOSTES (ID_RESPOSTA)
-//     );
-    
-// CREATE TABLE RESPOSTES (
-//     ID_RESPOSTA INTEGER NOT NULL,
-//     TEXTE VARCHAR(50) NOT NULL,
-//     ID_DEVICE VARCHAR(50) NOT NULL UNIQUE,
-//     CONSTRAINT RESPOSTA_DEVICE UNIQUE (ID_RESPOSTA,ID_DEVICE)
-//     );
