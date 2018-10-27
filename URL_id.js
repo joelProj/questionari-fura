@@ -95,7 +95,7 @@ function generateOptionsButton(options){
     for (var i in options)
         HTML+= `
                 
-                <button type="button" id="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalCenter" onclick="performPostRequest('${options[i]}'); return false;" >${options[i]}</button>
+                <button type="button" id="button" class="btn btn-info" data-toggle="modal" data-target="#mymodal" onclick="performPostRequest('${options[i]}'); return false;" >${options[i]}</button>
                 
                 `
 }
@@ -119,21 +119,19 @@ function generateEndHTML(questionID){
     //console.log(questionID);
     HTML += ` 
                 <!-- Modal -->
-                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"
+                                    data-backdrop="static" data-keyboard="false">
                   <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Gràcies per respondre!</h5>
                       </div>
                       <div class="modal-body">
-                        ...
+                        La teva resposta s'ha emmagatzemat correctament!
+                        <br> Gaudeix dels resultats :)
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                            <!-- empty on purpose -->
                       </div>
                     </div>
                   </div>
@@ -161,8 +159,8 @@ function generateEndHTML(questionID){
                 </script>
                 <!-- Bootstrap JSs --> 
                 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
                 </body> 
                 </html>`
 }
