@@ -67,17 +67,27 @@ function generateHeader(){
                 <!-- Our own CSS (work) -->
                 <style>
                 body{
-                 /*background: url("../images/laser_keyboard.jpg") no-repeat center center fixed;
-                 -webkit-background-size: cover;
-                 -moz-background-size: cover;
-                 -o-background-size: cover;
-                 background-size: cover;*/
+                    /*
+                    background: url('file:///home/albert/Documentos/questionari-fura/fondo1.jpg') no-repeat center center fixed;
+
+                    background-size: cover; // for IE9+, Safari 4.1+, Chrome 3.0+, Firefox 3.6+ 
+                    -webkit-background-size: cover; // for Safari 3.0 - 4.0 , Chrome 1.0 - 3.0 
+                    -moz-background-size: cover; // optional for Firefox 3.6 
+                    -o-background-size: cover; // for Opera 9.5 
+                    margin: 0; // to remove the default white margin of body 
+                    padding: 0; // to remove the default white margin of body 
+                    overflow: hidden;
+                    */
                  
                     background-color: #FFDEC7 !important;
                 }
                 .jumbotron {
+                    //background-color:#40FF6161 !important;
                     background-color:transparent !important;
                     text-align: center;
+                }
+                button {
+                    //background-color:#FF7632 !important;
                 }
                 
                 </style>
