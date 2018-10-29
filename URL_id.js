@@ -67,8 +67,8 @@ function generateHeader(){
                 <!-- Our own CSS (work) -->
                 <style>
                 body{
-                    /*
-                    background: url('file:///home/albert/Documentos/questionari-fura/fondo1.jpg') no-repeat center center fixed;
+                    
+                    background: url('https://www.conclusion.com.ar/wp-content/uploads/2015/10/espectaculos.jpg') no-repeat center center fixed;
 
                     background-size: cover; // for IE9+, Safari 4.1+, Chrome 3.0+, Firefox 3.6+ 
                     -webkit-background-size: cover; // for Safari 3.0 - 4.0 , Chrome 1.0 - 3.0 
@@ -77,14 +77,36 @@ function generateHeader(){
                     margin: 0; // to remove the default white margin of body 
                     padding: 0; // to remove the default white margin of body 
                     overflow: hidden;
-                    */
-                 
-                    background-color: #FFDEC7 !important;
+                    
+                    /*background-color: #FFDEC7 !important;*/
                 }
                 .jumbotron {
                     //background-color:#40FF6161 !important;
-                    background-color:transparent !important;
+                    background-color:#33777777 !important;
                     text-align: center;
+                    
+                    /*  100% — FF level of transparency
+                        95% — F2
+                        90% — E6
+                        85% — D9
+                        80% — CC
+                        75% — BF
+                        70% — B3
+                        65% — A6
+                        60% — 99
+                        55% — 8C
+                        50% — 80
+                        45% — 73
+                        40% — 66
+                        35% — 59
+                        30% — 4D
+                        25% — 40
+                        20% — 33
+                        15% — 26
+                        10% — 1A
+                        5% — 0D
+                        0% — 00
+                        */
                 }
                 button {
                     //background-color:#FF7632 !important;
