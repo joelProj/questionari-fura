@@ -52,7 +52,7 @@ function generateHeader(){
                 <head>              
                 <title>Questionari Fura</title> 
                 
-                <!-- Our own CSS -->
+                <!-- Our own CSS (doesnt work)-->
                 <link rel="stylesheet" type="text/css" href="designs.css"> 
                 
                 <!-- Required meta tags -->
@@ -64,6 +64,23 @@ function generateHeader(){
                 <meta charset="UTF-8"> 
                 <meta name="description" content="Questionari per l'espectacle"> 
                 
+                <!-- Our own CSS (work) -->
+                <style>
+                body{
+                 /*background: url("../images/laser_keyboard.jpg") no-repeat center center fixed;
+                 -webkit-background-size: cover;
+                 -moz-background-size: cover;
+                 -o-background-size: cover;
+                 background-size: cover;*/
+                 
+                    background-color: #FFDEC7 !important;
+                }
+                .jumbotron {
+                    background-color:transparent !important;
+                    text-align: center;
+                }
+                
+                </style>
                 </head> 
                 <body>  `
 }
@@ -88,20 +105,22 @@ function generateBody1(id, text){ //Generate till the beggining of the form
         <div class="container">
             <h1 class="display-4">Pregunta ${id} </h1>
             <p class="lead">${text}</p>
-            <hr class="my-4">
-            <form action="http://localhost:3000/answer" method="post" id="formButtons"> `
+            <hr class="my-4"> <!-- Line separating text from answers -->
+            <form action="http://localhost:3000/answer" method="post" id="formButtons"> 
+            <div class="row justify-content-md-center">`
 }
 function generateOptionsButton(options){
     for (var i in options)
         HTML+= `
-                
-                <button type="button" id="button" class="btn btn-info" data-toggle="modal" data-target="#mymodal" onclick="performPostRequest('${options[i]}'); return false;" >${options[i]}</button>
-                
+                <div class="col-md-auto">
+                    <button type="button" id="button" class="btn btn-info" data-toggle="modal" data-target="#mymodal" onclick="performPostRequest('${options[i]}'); return false;" >${options[i]}</button>
+                </div>
                 `
 }
 
 function generateBody2(){
     HTML += `
+            </div>
             </form> 
         </div>
     </div>`
