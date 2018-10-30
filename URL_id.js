@@ -47,15 +47,74 @@ function performPostRequest(val) {
 }
 
 function generateHeader(){
-    HTML += `   <!DOCTYPE HTML>     \
-                <html lang=\"es\">  \
-                <head>              \
-                <title>Questionari Fura</title> \
-                <meta charset=\"UTF-8\"> \
-                <meta name=\"description\" content=\"Questionari per l'espectacle\"> \
-                </head> \
-                <body> \
-                <div class=\"barra-lateral\" id=\"question\">`;
+    HTML += `   <!DOCTYPE HTML>     
+                <html lang="es">  
+                <head>              
+                <title>Questionari Fura</title> 
+                
+                <!-- Our own CSS (doesnt work)-->
+                <link rel="stylesheet" type="text/css" href="designs.css"> 
+                
+                <!-- Required meta tags -->
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                
+                <!-- Bootstrap CSS -->
+                <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
+                <meta charset="UTF-8"> 
+                <meta name="description" content="Questionari per l'espectacle"> 
+                
+                <!-- Our own CSS (work) -->
+                <style>
+                body{
+                    
+                    background: url('https://www.conclusion.com.ar/wp-content/uploads/2015/10/espectaculos.jpg') no-repeat center center fixed;
+
+                    background-size: cover; // for IE9+, Safari 4.1+, Chrome 3.0+, Firefox 3.6+ 
+                    -webkit-background-size: cover; // for Safari 3.0 - 4.0 , Chrome 1.0 - 3.0 
+                    -moz-background-size: cover; // optional for Firefox 3.6 
+                    -o-background-size: cover; // for Opera 9.5 
+                    margin: 0; // to remove the default white margin of body 
+                    padding: 0; // to remove the default white margin of body 
+                    overflow: hidden;
+                    
+                    /*background-color: #FFDEC7 !important;*/
+                }
+                .jumbotron {
+                    //background-color:#40FF6161 !important;
+                    background-color:#33777777 !important;
+                    text-align: center;
+                    
+                    /*  100% — FF level of transparency
+                        95% — F2
+                        90% — E6
+                        85% — D9
+                        80% — CC
+                        75% — BF
+                        70% — B3
+                        65% — A6
+                        60% — 99
+                        55% — 8C
+                        50% — 80
+                        45% — 73
+                        40% — 66
+                        35% — 59
+                        30% — 4D
+                        25% — 40
+                        20% — 33
+                        15% — 26
+                        10% — 1A
+                        5% — 0D
+                        0% — 00
+                        */
+                }
+                button {
+                    //background-color:#FF7632 !important;
+                }
+                
+                </style>
+                </head> 
+                <body>  `
 }
 
 function generateQuestionTitle(id){
@@ -66,28 +125,74 @@ function generateQuestionText(text){
     HTML += "<p>" + text + "<p><br><br>";
 }
 
-function generateBody(){
-    HTML += "   </div> \
-                \
-                <table> \
-                    <form action=\"http://localhost:3000/answer\" method=\"post\" id=\"formButtons\">";
+function generateBody2(){
+    HTML += ` <table> 
+                <form action="http://localhost:3000/answer" method="post" id="formButtons"> `
 }
 
+
+function generateBody1(id, text){ //Generate till the beggining of the form
+    HTML += `
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="display-4">Pregunta ${id} </h1>
+            <p class="lead">${text}</p>
+            <hr class="my-4"> <!-- Line separating text from answers -->
+            <form action="http://localhost:3000/answer" method="post" id="formButtons"> 
+            <div class="row justify-content-md-center">`
+}
 function generateOptionsButton(options){
     for (var i in options)
-        HTML+= `<button type="button" id="button" onclick="performPostRequest('${options[i]}'); return false;" >${options[i]}</button>`
+        HTML+= `
+                <div class="col-md-auto">
+                    <button type="button" id="button" class="btn btn-info" data-toggle="modal" data-target="#mymodal" onclick="performPostRequest('${options[i]}'); return false;" >${options[i]}</button>
+                </div>
+                `
 }
 
+function generateBody2(){
+    HTML += `
+            </div>
+            </form> 
+        </div>
+    </div>`
+}
+function generateBody(id, text, options){
+    generateBody1(id, text);
+    generateOptionsButton(options);
+    generateBody2();
+    
+                //<a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
+
+
+}
 function generateEndHTML(questionID){
     //console.log(questionID);
-    HTML += `   </form> 
-                </table> \
-                \
-                <br> \
-                <br> \
-                <br> \
-                </form> \
-                <script src="https://unpkg.com/axios/dist/axios.min.js"></script> \
+    HTML += ` 
+                <!-- Modal -->
+                <div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"
+                                    data-backdrop="static" data-keyboard="false">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Gràcies per respondre!</h5>
+                      </div>
+                      <div class="modal-body">
+                        La teva resposta s'ha emmagatzemat correctament!
+                        <br> Gaudeix dels resultats :)
+                      </div>
+                      <div class="modal-footer">
+                            <!-- empty on purpose -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+                <br> 
+                <br> 
+                <br>
+                <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
                 <script>
                 function performPostRequest(val) {    
                     console.log("VALUE: ",val);
@@ -102,8 +207,12 @@ function generateEndHTML(questionID){
                       });
                       //open(location, '_self').close();
                 }
-                </script>\
-                </body> \
+                </script>
+                <!-- Bootstrap JSs --> 
+                <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+                <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+                </body> 
                 </html>`
 }
 
@@ -111,12 +220,12 @@ function generateEndHTML(questionID){
 function generateWebpage(question){
     HTML = ""; //reset webpage in every get
     generateHeader();
-    generateQuestionTitle(question.id_fura);
+    //generateQuestionTitle(question.id_fura);
     
-    generateQuestionText(question.text);
+    //generateQuestionText(question.text);
     
-    generateBody();
-    generateOptionsButton(question.options);
+    generateBody(question.id_fura, question.text, question.options);
+    //generateOptionsButton(question.options);
     
     generateEndHTML(question.id_fura);
     
