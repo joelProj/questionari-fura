@@ -108,9 +108,21 @@ function generateHeader(){
                         0% — 00
                         */
                 }
+                .top-buffer {
+                    margin-top:20px; 
+                }
                 button {
                     //background-color:#FF7632 !important;
                 }
+                
+                h2{ 
+                    color:#FFF;
+                }
+                
+                h5{ 
+                    color:#FFF;
+                }
+                
                 
                 </style>
                 </head> 
@@ -135,16 +147,16 @@ function generateBody1(id, text){ //Generate till the beggining of the form
     HTML += `
     <div class="jumbotron">
         <div class="container">
-            <h1 class="display-4">Pregunta ${id} </h1>
-            <p class="lead">${text}</p>
+            <h5><strong>Pregunta ${id} </strong></h5>
+            <h2 class="display-4">${text}</h2>
             <hr class="my-4"> <!-- Line separating text from answers -->
             <form action="http://localhost:3000/answer" method="post" id="formButtons"> 
-            <div class="row justify-content-md-center">`
+            <div class="col-md-center align-self-center">`
 }
 function generateOptionsButton(options){
     for (var i in options)
         HTML+= `
-                <div class="col-md-auto">
+                <div class="row top-buffer justify-content-md-center">
                     <button type="button" id="button" class="btn btn-info" data-toggle="modal" data-target="#mymodal" onclick="performPostRequest('${options[i]}'); return false;" >${options[i]}</button>
                 </div>
                 `
