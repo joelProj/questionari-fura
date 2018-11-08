@@ -82,7 +82,8 @@ function generateHeader(){
                 }
                 .jumbotron {
                     //background-color:#40FF6161 !important;
-                    background-color:#33777777 !important;
+                    //background-color:#33777777 !important;
+                    background:linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.9),rgba(0,0,0,0) ) !important;
                     text-align: center;
                     
                     /*  100% — FF level of transparency
