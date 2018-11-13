@@ -138,12 +138,6 @@ function generateQuestionText(text){
     HTML += "<p>" + text + "<p><br><br>";
 }
 
-function generateBody2(){
-    HTML += ` <table> 
-                <form action="http://localhost:3000/answer" method="post" id="formButtons"> `
-}
-
-
 function generateBody1(id, text){ //Generate till the beggining of the form
     HTML += `
     <div class="jumbotron">
@@ -151,7 +145,6 @@ function generateBody1(id, text){ //Generate till the beggining of the form
             <h6><strong>Pregunta ${id} </strong></h6>
             <h4 class="display-4">${text}</h4>
             <hr class="my-4"> <!-- Line separating text from answers -->
-            <form action="http://localhost:3000/answer" method="post" id="formButtons"> 
             <div class="col-md-center align-self-center">`
 }
 function generateOptionsButton(options){
@@ -166,7 +159,6 @@ function generateOptionsButton(options){
 function generateBody2(){
     HTML += `
             </div>
-            </form> 
         </div>
     </div>`
 }
@@ -209,7 +201,10 @@ function generateEndHTML(questionID){
                 <script>
                 function performPostRequest(val) {    
                     console.log("VALUE: ",val);
-                    axios.post('http://localhost:3000/answer', {
+                    var url_temp = window.location.href;
+                    var url_end = url_temp.substr(0, url_temp.indexOf('/',10));
+                    
+                    axios.post(url_end + '/answer', {
                         id: "${questionID}",
                         value: val
                     }).then(function (response) {
