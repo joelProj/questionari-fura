@@ -151,7 +151,7 @@ function generateOptionsButton(options){
     for (var i in options)
         HTML+= `
                 <div class="row-fluid top-buffer justify-content-md-center">
-                    <button type="button" id="button" class="btn btn-info" data-toggle="modal" data-target="#mymodal" onclick="performPostRequest('${options[i]}'); return false;" >${options[i]}</button>
+                    <button type="button" id="button" class="btn btn-info" data-toggle="modal" data-target="#mymodal" onclick="performPostRequest(\`${options[i]}\`); return false;" >${options[i]}</button>
                 </div>
                 `
 }
