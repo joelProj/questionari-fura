@@ -57,7 +57,7 @@ function generateHeader(){
                 
                 <!-- Required meta tags -->
                 <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 
                 <!-- Bootstrap CSS -->
                 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous"> 
@@ -112,18 +112,83 @@ function generateHeader(){
                 .top-buffer {
                     margin-top:20px; 
                 }
-                button {
-                    //background-color:#FF7632 !important;
+               
+                div.title_header{
+                    color:white;
+                    font-size: 15px;
                 }
-                
-                h4{ 
-                    color:#FFF;
+                div.text_header{
+                    color:white;
+                    font-size: 30px;
                 }
-                
-                h6{ 
-                    color:#FFF;
+                button.button_size{
+                    padding: 10px 20px;
+                    font-size: 20px;
+                    border-radius: 10px;
                 }
-                
+                @media (min-width: 576px) {                    
+                    div.title_header{
+                        color:white;
+                        font-size: 20px;
+                    }
+                    div.text_header{
+                        color:white;
+                        font-size: 40px;
+                    } 
+                    button.button_size{
+                        padding: 10px 20px;
+                        font-size: 20px;
+                        border-radius: 10px;
+                    }
+                }
+
+                @media (min-width: 768px) { 
+                    div.title_header{
+                        color:white;
+                        font-size: 25px;
+                    }
+                    div.text_header{
+                        color:white;
+                        font-size: 50px;
+                    }
+                    button.button_size{
+                        padding: 10px 20px;
+                        font-size: 20px;
+                        border-radius: 10px;
+                    }
+                }
+
+                @media (min-width: 992px) { 
+                    div.title_header{
+                        font-size: 30px;
+                        color: white;
+                    }
+                    div.text_header{
+                        font-size: 60px;
+                        color: white;
+                    }
+                    button.button_size{
+                        padding: 10px 20px;
+                        font-size: 20px;
+                        border-radius: 10px;
+                    }
+                }
+
+                @media (min-width: 1200px) { 
+                    div.title_header{
+                        color:white;
+                        font-size: 35px;
+                    }
+                    div.text_header{
+                        color:white;
+                        font-size: 70px;
+                    }
+                    button.button_size{
+                        padding: 10px 20px;
+                        font-size: 20px;
+                        border-radius: 10px;
+                    }
+                }
                 
                 </style>
                 </head> 
@@ -142,8 +207,9 @@ function generateBody1(id, text){ //Generate till the beggining of the form
     HTML += `
     <div class="jumbotron">
         <div class="container">
-            <h6><strong>Pregunta ${id} </strong></h6>
-            <h4 class="display-4">${text}</h4>
+            <div class="title_header">Pregunta ${id} </div>
+            <div class="text_header">${text}</div>
+            
             <hr class="my-4"> <!-- Line separating text from answers -->
             <div class="col-md-center align-self-center">`
 }
@@ -151,7 +217,7 @@ function generateOptionsButton(options){
     for (var i in options)
         HTML+= `
                 <div class="row-fluid top-buffer justify-content-md-center">
-                    <button type="button" id="button" class="btn btn-info" data-toggle="modal" data-target="#mymodal" onclick="performPostRequest(\`${options[i]}\`); return false;" >${options[i]}</button>
+                    <button type="button" id="button" class="button_size" data-toggle="modal" data-target="#mymodal" onclick="performPostRequest(\`${options[i]}\`); return false;" >${options[i]}</button>
                 </div>
                 `
 }
