@@ -85,6 +85,7 @@ function generateHeader(){
                     //background-color:#33777777 !important;
                     background:linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.9),rgba(0,0,0,0) ) !important;
                     text-align: center;
+                    margin-bottom: 0px
                     
                     /*  100% — FF level of transparency
                         95% — F2
@@ -126,6 +127,9 @@ function generateHeader(){
                     font-size: 20px;
                     border-radius: 10px;
                 }
+                p.timer_display{
+                    font-size: 30px;
+                }
                 @media (min-width: 576px) {                    
                     div.title_header{
                         color:white;
@@ -139,6 +143,9 @@ function generateHeader(){
                         padding: 10px 20px;
                         font-size: 20px;
                         border-radius: 10px;
+                    }
+                    p.timer_display{
+                        font-size: 40px;
                     }
                 }
 
@@ -156,6 +163,9 @@ function generateHeader(){
                         font-size: 20px;
                         border-radius: 10px;
                     }
+                    p.timer_display{
+                        font-size: 50px;
+                    }
                 }
 
                 @media (min-width: 992px) { 
@@ -171,6 +181,9 @@ function generateHeader(){
                         padding: 10px 20px;
                         font-size: 20px;
                         border-radius: 10px;
+                    }
+                    p.timer_display{
+                        font-size: 60px;
                     }
                 }
 
@@ -188,6 +201,9 @@ function generateHeader(){
                         font-size: 20px;
                         border-radius: 10px;
                     }
+                    p.timer_display{
+                        font-size: 70px;
+                    }
                 }
                 
                 </style>
@@ -195,16 +211,9 @@ function generateHeader(){
                 <body>  `
 }
 
-function generateQuestionTitle(id){
-    HTML += "<h3>Pregunta " + id + "</h3>"
-}
-
-function generateQuestionText(text){
-    HTML += "<p>" + text + "<p><br><br>";
-}
-
 function generateBody1(id, text){ //Generate till the beggining of the form
     HTML += `
+    
     <div class="jumbotron">
         <div class="container">
             <div class="title_header">Pregunta ${id} </div>
@@ -226,18 +235,18 @@ function generateBody2(){
     HTML += `
             </div>
         </div>
-    </div>`
+    </div>
+    
+    <p class='timer_display' id='timer_display' align='right' margin-right='155px' style='color:white; margin-right: 30px'></p>
+    `
 }
 function generateBody(id, text, options){
     generateBody1(id, text);
     generateOptionsButton(options);
     generateBody2();
-    
-                //<a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-
-
 }
-function generateEndHTML(questionID){
+
+function generateEndHTML(questionID, timeout){
     //console.log(questionID);
     HTML += ` 
                 <!-- Modal -->
@@ -260,12 +269,39 @@ function generateEndHTML(questionID){
                 </div>
 
 
+                <!-- Modal Timeout-->
+                <div class="modal fade" id="modal-timeout" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"
+                                    data-backdrop="static" data-keyboard="false">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Temps esgotat!</h5>
+                      </div>
+                      <div class="modal-body">
+                        S'ha excedit el temps de resposta.
+                        <br> Intenta ser més ràpid la pròxima vegada!
+                      </div>
+                      <div class="modal-footer">
+                            <!-- empty on purpose -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 <br> 
                 <br> 
                 <br>
                 <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
                 <script>
+                var timer = setTimeout(function(){$('#modal-timeout').modal('show')}, ${timeout});
+                var remaining_time = ${timeout}/1000;
+                var interval;
+                
+                /////////////////////////////// POST SCRIPTS /////////////////////////////
                 function performPostRequest(val) {    
+                    // Stop timer and updating timer
+                    clearTimeout(timer); timer = 0;
+                    clearInterval(interval); interval = 0;
+                    
                     console.log("VALUE: ",val);
                     var url_temp = window.location.href;
                     var url_end = url_temp.substr(0, url_temp.indexOf('/',10));
@@ -281,7 +317,24 @@ function generateEndHTML(questionID){
                       });
                       //open(location, '_self').close();
                 }
+
+                
+                ///////////////////////////// TIMER SCRIPT ///////////////////////////
+                document.getElementById("timer_display").innerHTML = remaining_time + "s ";
+                --remaining_time;
+                
+                // Update the count down every 1 second
+                interval = setInterval(function() {
+                    document.getElementById("timer_display").innerHTML = remaining_time + "s ";
+                    --remaining_time;
+                     
+                    if (remaining_time < 0) {
+                        document.getElementById("timer_display").innerHTML = "EXPIRED";
+                    }
+                }, 1000);
                 </script>
+                
+                
                 <!-- Bootstrap JSs --> 
                 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
@@ -290,18 +343,13 @@ function generateEndHTML(questionID){
                 </html>`
 }
 
-
-function generateWebpage(question){
+function generateWebpage(question, timeout){
     HTML = ""; //reset webpage in every get
     generateHeader();
-    //generateQuestionTitle(question.id_fura);
-    
-    //generateQuestionText(question.text);
     
     generateBody(question.id_fura, question.text, question.options);
-    //generateOptionsButton(question.options);
     
-    generateEndHTML(question.id_fura);
+    generateEndHTML(question.id_fura, timeout);
     
     return HTML;
 }
