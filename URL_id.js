@@ -293,7 +293,7 @@ function generateEndHTML(questionID, timeout, group){
                 <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
                 <script>
                 var timer = setTimeout(function(){$('#modal-timeout').modal('show')}, ${timeout});
-                var remaining_time = ${timeout}/1000;
+                var remaining_time = ${timeout};
                 var interval;
                 
                 /////////////////////////////// POST SCRIPTS /////////////////////////////
@@ -344,13 +344,13 @@ function generateEndHTML(questionID, timeout, group){
                 </html>`
 }
 
-function generateWebpage(question, timeout){
+function generateWebpage(question){
     HTML = ""; //reset webpage in every get
     generateHeader();
     
-    generateBody(question.id_fura, question.text, question.options);
+    generateBody(question.id_fura, question.text, question.answers);
     
-    generateEndHTML(question.id_fura, timeout, question.group);
+    generateEndHTML(question.id_fura, question.timer, question.group);
     
     return HTML;
 }
