@@ -31,20 +31,20 @@ var HTML = "";
 //     });   
 // }
 
-function performPostRequest(val) {   
-    console.log("VALUE: ",val);
-    axios.post('http://localhost:3000/answers', {
-        id: questionID,
-        completed: false,
-        value: val
-    })
-    .then(function (response) {
-        resultElement.innerHTML = generateSuccessHTMLOutput(response);
-    })
-    .catch(function (error) {
-        resultElement.innerHTML = generateErrorHTMLOutput(error);
-    });
-}
+// function performPostRequest(val) {   
+//     console.log("VALUE: ",val);
+//     axios.post('http://localhost:3000/answers', {
+//         id: questionID,
+//         completed: false,
+//         value: val
+//     })
+//     .then(function (response) {
+//         resultElement.innerHTML = generateSuccessHTMLOutput(response);
+//     })
+//     .catch(function (error) {
+//         resultElement.innerHTML = generateErrorHTMLOutput(error);
+//     });
+// }
 
 function generateHeader(){
     HTML += `   <!DOCTYPE HTML>     
@@ -166,7 +166,7 @@ function generateBody(id, text, options){
 
 
 }
-function generateEndHTML(questionID){
+function generateEndHTML(questionID, group){
     //console.log(questionID);
     HTML += ` 
                 <!-- Modal -->
@@ -194,10 +194,10 @@ function generateEndHTML(questionID){
                 <br>
                 <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
                 <script>
-                function performPostRequest(val) {    
-                    console.log("VALUE: ",val);
+                function performPostRequest(val) { 
                     axios.post('http://localhost:3000/answer', {
                         id: "${questionID}",
+                        group: "${group}",
                         value: val
                     }).then(function (response) {
                         console.log(response);
@@ -227,7 +227,7 @@ function generateWebpage(question){
     generateBody(question.id_fura, question.text, question.options);
     //generateOptionsButton(question.options);
     
-    generateEndHTML(question.id_fura);
+    generateEndHTML(question.id_fura, question.group);
     
     return HTML;
 }
