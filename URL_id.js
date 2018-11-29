@@ -292,7 +292,7 @@ function generateEndHTML(questionID, timeout, group){
                 <br>
                 <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
                 <script>
-                var timer = setTimeout(function(){$('#modal-timeout').modal('show')}, ${timeout});
+                var timer = setTimeout(function(){$('#modal-timeout').modal('show')}, ${timeout}*1000);
                 var remaining_time = ${timeout};
                 var interval;
                 
@@ -331,6 +331,7 @@ function generateEndHTML(questionID, timeout, group){
                      
                     if (remaining_time < 0) {
                         document.getElementById("timer_display").innerHTML = "EXPIRED";
+                        clearInterval(interval); interval = 0;
                     }
                 }, 1000);
                 </script>

@@ -1,4 +1,5 @@
 const express = require('express');
+const form = require('../user_form')
 const web = require('../URL_id');
 const router = express.Router();
 var Question = require('../models/question');
@@ -28,7 +29,8 @@ router.get('/:id', async (req, res, next) => {
         return prev;
     }, []);
     
-    var webpage = await web.generateWebpage(quest);
+    var webpage = await form.generateForm();
+    //var webpage = await web.generateWebpage(quest);
     res.send(webpage);
 });
 
