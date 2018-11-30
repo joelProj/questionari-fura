@@ -302,22 +302,73 @@ function generateEndHTML(questionID, timeout, group){
                     clearTimeout(timer); timer = 0;
                     clearInterval(interval); interval = 0;
                     
-                    console.log("VALUE: ",val);
+                    //Get cookie, if undefined create
+                    var userFura = getCookie("userFura");
+                    if(!userFura && !userFura.length){
+                        var uuid = generateUUID();
+                        var user = {
+                            uuid: uuid,
+                            userCode: null
+                        }
+                        var strUser = JSON.stringify(user);
+                        setCookie("userFura", strUser, 1);
+                        userFura = user;
+                    }
+                    else userFura = JSON.parse(userFura);
+                
                     var url_temp = window.location.href;
                     var url_end = url_temp.substr(0, url_temp.indexOf('/',10));
                     
                     axios.post(url_end + '/answer', {
                         id: "${questionID}",
+                        uuid: userFura.uuid,
+                        userCode: userFura.userCode,
                         group: "${group}",
                         value: val
                     }).then(function (response) {
                         console.log(response);
-                      })
-                      .catch(function (error) {
+                    })
+                    .catch(function (error) {
                         console.log(error);
-                      });
-                      //open(location, '_self').close();
+                    });
+                    //open(location, '_self').close();
                 }
+                
+                function getCookie(cname) {
+                    var name = cname + "=";
+                    var decodedCookie = decodeURIComponent(document.cookie);
+                    var ca = decodedCookie.split(';');
+                    for(var i = 0; i <ca.length; i++) {
+                        var c = ca[i];
+                        while (c.charAt(0) == ' ') {
+                            c = c.substring(1);
+                        }
+                        if (c.indexOf(name) == 0) {
+                            return c.substring(name.length, c.length);
+                        }
+                    }
+                    return "";
+                }
+                
+                function setCookie(cname, cvalue, exdays) {
+                    var d = new Date();
+                    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+                    var expires = "expires="+ d.toUTCString();
+                    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+                }
+                
+                function generateUUID() {
+                    var d = new Date().getTime();
+                    if(Date.now){
+                        d = Date.now(); //high-precision timer
+                    }
+                    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        var r = (d + Math.random()*16)%16 | 0;
+                        d = Math.floor(d/16);
+                        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+                    });
+                    return uuid;
+                };
 
                 
                 ///////////////////////////// TIMER SCRIPT ///////////////////////////
@@ -367,4 +418,77 @@ function generateErrorHTMLOutput(error) {
 module.exports = {
     generateWebpage
 }
+
+function performPostRequest(val) {    
+    // Stop timer and updating timer
+    clearTimeout(timer); timer = 0;
+    clearInterval(interval); interval = 0;
+    
+    //Get cookie, if undefined create
+    var userFura = getCookie("userFura");
+    if(!userFura && !userFura.length){
+        var uuid = generateUUID();
+        var user = {
+            uuid: uuid,
+            userCode: null
+        }
+        var strUser = JSON.stringify(user);
+        setCookie("userFura", strUser, 1);
+        userFura = user;
+    }
+    else userFura = JSON.parse(userFura);
+
+    var url_temp = window.location.href;
+    var url_end = url_temp.substr(0, url_temp.indexOf('/',10));
+    
+    axios.post(url_end + '/answer', {
+        id: "${questionID}",
+        uuid: userFura.uuid,
+        userCode: userFura.userCode || "",
+        group: "${group}",
+        value: val
+    }).then(function (response) {
+        console.log(response);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
+    //open(location, '_self').close();
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function generateUUID() {
+    var d = new Date().getTime();
+    if(Date.now){
+        d = Date.now(); //high-precision timer
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
 

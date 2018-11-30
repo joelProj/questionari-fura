@@ -29,8 +29,8 @@ router.get('/:id', async (req, res, next) => {
         return prev;
     }, []);
     
-    var webpage = await form.generateForm();
-    //var webpage = await web.generateWebpage(quest);
+    // var webpage = await form.generateForm();
+    var webpage = await web.generateWebpage(quest);
     res.send(webpage);
 });
 
