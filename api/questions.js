@@ -29,7 +29,9 @@ router.get('/:id', async (req, res, next) => {
         return prev;
     }, []);
     
-    var webpage = await form.generateForm();
+    quest.language = questionLanguage;
+    
+    var webpage = await form.generateForm(quest);
     //var webpage = await web.generateWebpage(quest);
     res.send(webpage);
 });
