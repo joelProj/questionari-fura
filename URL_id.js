@@ -1,4 +1,61 @@
 var HTML = "";
+var titleWithLanguageDic = {
+        ca: 'Pregunta',
+        es: 'Pregunta',
+        en: 'Question',
+        pt: 'Questão',
+        it: 'Domanda',
+        fr: 'Question',
+        de: 'Frage',
+        ru: 'вопрос',
+        ja: '質問',
+        zh: '問題',
+        
+        def: 'Pregunta'
+}
+var modalSubmitTextWithLanguageDic = {
+        ca: ['Gràcies per respondre!', "La teva resposta s'ha emmagatzemat correctament!","Gaudeix dels resultats :)"],
+        es: ['Gracias por responder!', "Su respuesta se ha almacenado correctamente!","Disfrute de los resultados :)"],
+        en: ['Thanks for answering!', "Your response has been correctly stored!","Enjoy the results :)"],
+        pt: ['Obrigado por responder!', "Sua resposta foi armazenada corretamente!", "Aproveite os resultados :)"],
+        it: ['Grazie per aver risposto!', "La tua risposta è stata memorizzata correttamente!", "Goditi i risultati :)"],
+        fr: ["Merci d'avoir répondu!", "Votre réponse a été correctement stockée!", "Profitez des résultats :)"],
+        de: ['Danke für die Beantwortung!', "Ihre Antwort wurde korrekt gespeichert!", "Genießen Sie die Ergebnisse :)"],
+        ru: ['Спасибо за ответ!', 'Ваш ответ был правильно сохранен!', 'Наслаждайтесь результатами :)'],
+        ja: ['ありがとうございました！', 'あなたの応答は正しく保存されました！', '結果をお楽しみください :)'],
+        zh: ['感謝您的回答！', '您的回复已正確存儲！','享受結果 :)'],
+        
+        def: ['Gracias por responder!', "Su respuesta se ha almacenado correctamente!","Disfrute de los resultats :)"]
+}
+var modalExpiredTextWithLanguageDic = {
+        ca: ['Temps esgotat!',"S'ha excedit el temps de resposta.","Intenta ser més ràpid la pròxima vegada!"],
+        es: ['Tiempo agotado!', "Se ha excedido el tiempo de respuesta.", "Intenta ser más rápido la próxima vez!"],
+        en: ['Time ran out!', "Response time has been exceeded.", "Try to be faster next time!"],
+        pt: ['Tempo esgotou!', "O tempo de resposta foi excedido.", "Tente ser mais rápido da próxima vez!"],
+        it: ['Il tempo è scaduto!', "Il tempo di risposta è stato superato.", "Cerca di essere più veloce la prossima volta!"],
+        fr: ["Le temps s'est écoulé!", "Le temps de réponse a été dépassé.", "Essayez d'être plus rapide la prochaine fois!"],
+        de: ['Die Zeit ist abgelaufen!', 'Die Antwortzeit wurde überschritten.', 'Versuchen Sie das nächste Mal schneller zu sein!'],
+        ru: ['Время кончилось!', 'Время отклика превышено', 'Старайтесь быть быстрее в следующий раз!'],
+        ja: ['時間がなくなった！', '応答時間を超えました.', '次回より速くしよう！'],
+        zh: ['時間用光了！','已超出響應時間.','下次嘗試加快速度！'],
+        
+        def: ['Tiempo agotado!', "Se ha excedido el tiempo de respuesta.", "Intenta ser más rápido la próxima vez!"]
+}
+var expiredTextWithLanguageDic = {
+        ca: 'CADUCAT',
+        es: 'EXPIRADO',
+        en: 'EXPIRED',
+        pt: 'EXPIROU',
+        it: 'SCADUTO',
+        fr: 'EXPIRÉ',
+        de: 'ABGELAUFEN',
+        ru: 'окончившийся',
+        ja: '終了しました',
+        zh: '結束',
+        
+        def: 'EXPIRADO'
+}
+
 
 // function GetURLParameter(sParam)
 // {
@@ -211,22 +268,24 @@ function generateHeader(){
                 <body>  `
 }
 
-function generateBody1(id, text){ //Generate till the beggining of the form
+function generateBody1(title, id, text){ //Generate till the beggining of the form
     HTML += `
     
     <div class="jumbotron">
         <div class="container">
-            <div class="title_header">Pregunta ${id} </div>
+            <div class="title_header">${title} ${id} </div>
             <div class="text_header">${text}</div>
             
             <hr class="my-4"> <!-- Line separating text from answers -->
-            <div class="col-md-center align-self-center">`
+            
+            <div class="row">
+            `
 }
 function generateOptionsButton(options){
     for (var i in options)
         HTML+= `
-                <div class="row-fluid top-buffer justify-content-md-center">
-                    <button type="button" id="button" class="button_size" data-toggle="modal" data-target="#mymodal" onclick="performPostRequest(\`${options[i]}\`); return false;" >${options[i]}</button>
+                <div class="col-12 offset-0 top-buffer justify-content-center">
+                    <button type="button" id="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#mymodal" onclick="performPostRequest(\`${options[i]}\`); return false;" >${options[i]}</button>
                 </div>
                 `
 }
@@ -240,14 +299,13 @@ function generateBody2(){
     <p class='timer_display' id='timer_display' align='right' margin-right='155px' style='color:white; margin-right: 30px'></p>
     `
 }
-function generateBody(id, text, options){
-    generateBody1(id, text);
+function generateBody(title, id, text, options){
+    generateBody1(title, id, text);
     generateOptionsButton(options);
     generateBody2();
 }
 
-function generateEndHTML(questionID, timeout, group){
-    //console.log(questionID);
+function generateEndHTML(modalSubmit, modalExpired, questionID, timeout, group, expiredText){
     HTML += ` 
                 <!-- Modal -->
                 <div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"
@@ -255,11 +313,10 @@ function generateEndHTML(questionID, timeout, group){
                   <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Gràcies per respondre!</h5>
+                        <h5 class="modal-title" id="exampleModalCenterTitle">${modalSubmit[0]}</h5>
                       </div>
                       <div class="modal-body">
-                        La teva resposta s'ha emmagatzemat correctament!
-                        <br> Gaudeix dels resultats :)
+                        ${modalSubmit[1]} <br> ${modalSubmit[2]}
                       </div>
                       <div class="modal-footer">
                             <!-- empty on purpose -->
@@ -275,11 +332,10 @@ function generateEndHTML(questionID, timeout, group){
                   <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Temps esgotat!</h5>
+                        <h5 class="modal-title" id="exampleModalCenterTitle">${modalExpired[0]}</h5>
                       </div>
                       <div class="modal-body">
-                        S'ha excedit el temps de resposta.
-                        <br> Intenta ser més ràpid la pròxima vegada!
+                        ${modalExpired[1]} <br> ${modalExpired[2]}
                       </div>
                       <div class="modal-footer">
                             <!-- empty on purpose -->
@@ -381,7 +437,7 @@ function generateEndHTML(questionID, timeout, group){
                     --remaining_time;
                      
                     if (remaining_time < 0) {
-                        document.getElementById("timer_display").innerHTML = "EXPIRED";
+                        document.getElementById("timer_display").innerHTML = "${expiredText}";
                         clearInterval(interval); interval = 0;
                     }
                 }, 1000);
@@ -398,13 +454,46 @@ function generateEndHTML(questionID, timeout, group){
 
 function generateWebpage(question){
     HTML = ""; //reset webpage in every get
+    var titleText = computeTitleTextDependingOnLang(question.language)
+    var modalSubmitText = computeModalSubmitTextDependingOnLang(question.language)
+    var modalExpiredText = computeModalExpiredTextDependingOnLang(question.language)
+    var expiredText = computeExpiredTextDependingOnLang(question.language)
+    
     generateHeader();
     
-    generateBody(question.id_fura, question.text, question.answers);
+    generateBody(titleText, 
+                 question.id_fura, 
+                 question.text, 
+                 question.answers);
     
-    generateEndHTML(question.id_fura, question.timer, question.group);
+    generateEndHTML(modalSubmitText, modalExpiredText, question.id_fura, question.timer, question.group, expiredText);
     
     return HTML;
+}
+
+function computeTitleTextDependingOnLang(lang){
+    if (!(lang in titleWithLanguageDic))
+        return titleWithLanguageDic['def'];
+    else
+        return titleWithLanguageDic[lang];
+}
+function computeModalSubmitTextDependingOnLang(lang){
+    if (!(lang in modalSubmitTextWithLanguageDic))
+        return modalSubmitTextWithLanguageDic['def'];
+    else
+        return modalSubmitTextWithLanguageDic[lang];
+}
+function computeModalExpiredTextDependingOnLang(lang){
+    if (!(lang in modalExpiredTextWithLanguageDic))
+        return modalExpiredTextWithLanguageDic['def'];
+    else
+        return modalExpiredTextWithLanguageDic[lang];
+}
+function computeExpiredTextDependingOnLang(lang){
+    if (!(lang in expiredTextWithLanguageDic))
+        return expiredTextWithLanguageDic['def'];
+    else
+        return expiredTextWithLanguageDic[lang];
 }
 
 function generateSuccessHTMLOutput(response) {

@@ -1,5 +1,64 @@
 var HTML;
 
+var titleWithLanguageDic = {
+        ca: 'Benvingut!',
+        es: 'Bienvenido!',
+        en: 'Welcome!',
+        pt: 'Bem vinda!',
+        it: 'Benvenuto!',
+        fr: 'Bienvenue!',
+        de: 'Willkommen',
+        ru: 'Добро пожаловать!',
+        ja: 'ようこそ！',
+        zh: '歡迎！',
+        
+        def: 'Bienvenido!'
+}
+
+var hintWithLanguageDic = {
+        ca: "Introdueixi el seu codi d'usuari",
+        es: 'Introduzca su código de usuario',
+        en: 'Enter your user code',
+        pt: "Digite seu código de usuário",
+        it: 'Inserisci il tuo codice utente',
+        fr: "Entrez votre code d'utilisateur",
+        de: 'Geben Sie Ihren Benutzercode ein',
+        ru: 'Введите код пользователя',
+        ja: 'ユーザーコードを入力してください',
+        zh: '輸入您的用戶代碼',
+        
+        def: 'Introduzca su código de usuario'
+}
+
+var neverShareWithLanguageDic = {
+        ca: "Mai no compartirem el vostre nom d'usuari amb cap altra persona.",
+        es: 'Nunca compartiremos tu nombre de usuario con nadie más.',
+        en: "We'll never share your username with anyone else.",
+        pt: 'Nós nunca vamos compartilhar seu nome de usuário com mais ninguém.',
+        it: 'Non condivideremo mai il tuo nome utente con nessun altro.',
+        fr: "Nous ne partagerons jamais votre nom d'utilisateur avec qui que ce soit.",
+        de: 'Wir geben Ihren Benutzernamen niemals an Dritte weiter.',
+        ru: 'Мы никогда не будем делиться вашим именем пользователя с кем-либо еще.',
+        ja: '私たちは他の誰ともあなたのユーザー名を共有しません.',
+        zh: '我們絕不會與其他任何人分享您的用戶名.',
+        
+        def: 'Pregunta'
+}
+var buttonSubmitWithLanguageDic = {
+        ca: 'Enviar',
+        es: 'Enviar',
+        en: 'Submit',
+        pt: 'Enviar',
+        it: 'Sottoscrivi',
+        fr: 'Submit',
+        de: 'Einreichen',
+        ru: 'Отправить',
+        ja: '提出する',
+        zh: '提交',
+        
+        def: 'Enviar'
+}
+
 function generateHeader(){
     HTML += `   <!DOCTYPE HTML>     
                 <html lang="es">  
@@ -34,35 +93,11 @@ function generateHeader(){
                     
                     /*background-color: #FFDEC7 !important;*/
                 }
-                .jumbotron {
+                .container-fluid {
                     //background-color:#40FF6161 !important;
                     //background-color:#33777777 !important;
                     background:linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.9),rgba(0,0,0,0) ) !important;
                     text-align: center;
-                    margin-bottom: 0px
-                    
-                    /*  100% — FF level of transparency
-                        95% — F2
-                        90% — E6
-                        85% — D9
-                        80% — CC
-                        75% — BF
-                        70% — B3
-                        65% — A6
-                        60% — 99
-                        55% — 8C
-                        50% — 80
-                        45% — 73
-                        40% — 66
-                        35% — 59
-                        30% — 4D
-                        25% — 40
-                        20% — 33
-                        15% — 26
-                        10% — 1A
-                        5% — 0D
-                        0% — 00
-                        */
                 }
                 .top-buffer {
                     margin-top:20px; 
@@ -165,22 +200,23 @@ function generateHeader(){
                 <body>  `
 }
 
-function generateBody(){ //Generate till the beggining of the form
+function generateBody(title,hint,neverShare,buttonSubmit){ //Generate till the beggining of the form
     HTML += `
-    <div class="container">
-    <form>
-        <div class="form-group">
-            <div class="text_header" for="inputUserName" align="center">Welcome!</div>
-            <input type="text" class="form-control" id="inputUserName" aria-describedby="Input username" placeholder="Enter your username"
-                onkeyup="enableButton(document.getElementById('inputUserName').value)">
-            <small id="emailHelp" class="form-text text-muted">We'll never share your username with anyone else.</small>
-        </div>
-        <div class="row-fluid justify-content-center">
-            <div class="col align-self-center">
-                <button id="buttonSubmit" type="button" class="btn btn-primary" disabled onclick="performPostRequest(document.getElementById('inputUserName').value)">Submit</button>
+    <div class="container-fluid">
+    <div class="row">
+    <div class="col-12 offset-0 d-flex justify-content-center">
+        <form class="w-75 mt-3">
+            <div class="form-group">
+                <div class="text_header" for="inputUserName" text-center>${title}</div>
+                <input type="text" class="form-control" id="inputUserName" aria-describedby="Input username" placeholder="${hint}"
+                    onkeyup="enableButton(document.getElementById('inputUserName').value)">
+                <small id="emailHelp" class="form-text text-muted">${neverShare}</small>
             </div>
-        </div>
-    </form>
+            <button id="buttonSubmit" type="button" class="btn btn-primary" disabled onclick="performPostRequest(document.getElementById('inputUserName').value)">
+            ${buttonSubmit}</button>
+        </form>
+    </div>
+    </div>    
     </div>
     `
 }
@@ -231,15 +267,44 @@ function generateEndHTML(){
     </html>`
 }
 
-function generateForm(){
+function generateForm(question){
     HTML = ""; //reset webpage in every get
+    var titleText = computeTitleTextDependingOnLang(question.language)
+    var hintText = computeHintTextDependingOnLang(question.language)
+    var neverShareText= computeNeverShareTextDependingOnLang(question.language)
+    var buttonSubmitText = computeButtonSubmitTextDependingOnLang(question.language)
+    
     generateHeader();
     
-    generateBody();
+    generateBody(titleText,hintText,neverShareText,buttonSubmitText);
     
     generateEndHTML();
 
     return HTML;
+}
+function computeTitleTextDependingOnLang(lang){
+    if (!(lang in titleWithLanguageDic))
+        return titleWithLanguageDic['def'];
+    else
+        return titleWithLanguageDic[lang];
+}
+function computeHintTextDependingOnLang(lang){
+    if (!(lang in hintWithLanguageDic))
+        return hintWithLanguageDic['def'];
+    else
+        return hintWithLanguageDic[lang];
+}
+function computeNeverShareTextDependingOnLang(lang){
+    if (!(lang in neverShareWithLanguageDic))
+        return neverShareWithLanguageDic['def'];
+    else
+        return neverShareWithLanguageDic[lang];
+}
+function computeButtonSubmitTextDependingOnLang(lang){
+    if (!(lang in buttonSubmitWithLanguageDic))
+        return buttonSubmitWithLanguageDic['def'];
+    else
+        return buttonSubmitWithLanguageDic[lang];
 }
 
 function generateSuccessHTMLOutput(response) {
