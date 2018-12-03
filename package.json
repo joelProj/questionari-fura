@@ -9,6 +9,7 @@
     "author": "Joel Moreno",
     "main": "index.js",
     "scripts": {
+        "start": "node server.js",
         "test": "echo \"error Test not found\" "
     },
     "dependencies": {
