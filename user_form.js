@@ -58,6 +58,20 @@ var buttonSubmitWithLanguageDic = {
         
         def: 'Enviar'
 }
+var modalThanksWithLanguageDic = {
+    ca: ['Gràcies per respondre!', "La teva resposta s'ha emmagatzemat correctament!"],
+    es: ['Gracias por responder!', "Su respuesta se ha almacenado correctamente!"],
+    en: ['Thanks for answering!', "Your response has been correctly stored!"],
+    pt: ['Obrigado por responder!', "Sua resposta foi armazenada corretamente!"],
+    it: ['Grazie per aver risposto!', "La tua risposta è stata memorizzata correttamente!"],
+    fr: ["Merci d'avoir répondu!", "Votre réponse a été correctement stockée!"],
+    de: ['Danke für die Beantwortung!', "Ihre Antwort wurde korrekt gespeichert!"],
+    ru: ['Спасибо за ответ!', 'Ваш ответ был правильно сохранен!'],
+    ja: ['ありがとうございました！', 'あなたの応答は正しく保存されました！'],
+    zh: ['感謝您的回答！', '您的回复已正確存儲！'],
+    
+    def: ['Gracias por responder!', "Su respuesta se ha almacenado correctamente!"]
+}
 
 function generateHeader(){
     HTML += `   <!DOCTYPE HTML>     
@@ -212,7 +226,7 @@ function generateBody(title,hint,neverShare,buttonSubmit){ //Generate till the b
                     onkeyup="enableButton(document.getElementById('inputUserName').value)">
                 <small id="emailHelp" class="form-text text-muted">${neverShare}</small>
             </div>
-            <button id="buttonSubmit" type="button" class="btn btn-primary" disabled onclick="performPostRequest(document.getElementById('inputUserName').value)">
+            <button id="buttonSubmit" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-thanks" disabled onclick="performCookieCode(document.getElementById('inputUserName').value)">
             ${buttonSubmit}</button>
         </form>
     </div>
@@ -221,39 +235,96 @@ function generateBody(title,hint,neverShare,buttonSubmit){ //Generate till the b
     `
 }
 
-function generateEndHTML(){
+function generateEndHTML(modalText){
     //console.log(questionID);
     HTML += ` 
 
     <br> 
     <br> 
     <br>
+    <!-- Modal Thanks-->
+    <div class="modal fade" id="modal-thanks" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"
+                        data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">${modalText[0]}</h5>
+            </div>
+            <div class="modal-body">
+                ${modalText[1]}
+            </div>
+            <div class="modal-footer">
+                <!-- empty on purpose -->
+            </div>
+        </div>
+        </div>
+    </div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script> 
     <script>
     /////////////////////////////// POST SCRIPTS /////////////////////////////
-    function performPostRequest(val) {    
-        var url_temp = window.location.href;
-        var url_end = url_temp.substr(0, url_temp.indexOf('/',10));
-        
-        axios.post(url_end + '/user_ids', {
-            username: val
-        }).then(function (response) {
-            console.log(response);
-            })
-            .catch(function (error) {
-            console.log(error);
-            });
+    function performCookieCode(val) { 
+        //Get cookie, if undefined create
+        var userFura = getCookie("userFura");
+        var strUser;
+        if(!userFura && !userFura.length){
+            var uuid = generateUUID();
+            var user = {
+                uuid: uuid,
+                userCode: val
+            }
+            strUser = JSON.stringify(user);
+            
+        }
+        else {
+            userFura = JSON.parse(userFura);
+            userFura.userCode = val;
+            strUser = JSON.stringify(userFura);
+        }
+        setCookie("userFura", strUser, 1);
     }
+    
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+    
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        var expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+    
+    function generateUUID() {
+        var d = new Date().getTime();
+        if(Date.now){
+            d = Date.now(); //high-precision timer
+        }
+        var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            var r = (d + Math.random()*16)%16 | 0;
+            d = Math.floor(d/16);
+            return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+        });
+        return uuid;
+    };
 
     function enableButton(text){
-        console.log(text)
         if (text == ''){ //disable button
             document.getElementById('buttonSubmit').disabled = true;
-            console.log(document.getElementById('buttonSubmit').value)
         }
         else{
             document.getElementById('buttonSubmit').disabled = false;
-            console.log('enabled')
         }
     }
 
@@ -267,18 +338,19 @@ function generateEndHTML(){
     </html>`
 }
 
-function generateForm(question){
+function generateForm(lang){
     HTML = ""; //reset webpage in every get
-    var titleText = computeTitleTextDependingOnLang(question.language)
-    var hintText = computeHintTextDependingOnLang(question.language)
-    var neverShareText= computeNeverShareTextDependingOnLang(question.language)
-    var buttonSubmitText = computeButtonSubmitTextDependingOnLang(question.language)
+    var titleText = computeTitleTextDependingOnLang(lang)
+    var hintText = computeHintTextDependingOnLang(lang)
+    var neverShareText= computeNeverShareTextDependingOnLang(lang)
+    var buttonSubmitText = computeButtonSubmitTextDependingOnLang(lang)
+    var modalText = computeModalTextDependingOnLang(lang)
     
     generateHeader();
     
     generateBody(titleText,hintText,neverShareText,buttonSubmitText);
     
-    generateEndHTML();
+    generateEndHTML(modalText);
 
     return HTML;
 }
@@ -306,6 +378,12 @@ function computeButtonSubmitTextDependingOnLang(lang){
     else
         return buttonSubmitWithLanguageDic[lang];
 }
+function computeModalTextDependingOnLang(lang){
+    if (!(lang in modalThanksWithLanguageDic))
+        return modalThanksWithLanguageDic['def'];
+    else
+        return modalThanksWithLanguageDic[lang];
+}
 
 function generateSuccessHTMLOutput(response) {
   return  response.data;
@@ -318,3 +396,63 @@ function generateErrorHTMLOutput(error) {
 module.exports = {
     generateForm
 }
+
+// COOKIES
+/*
+function performCookieCode(val) { 
+    //Get cookie, if undefined create
+    var userFura = getCookie("userFura");
+    var strUser;
+    if(!userFura && !userFura.length){
+        var uuid = generateUUID();
+        var user = {
+            uuid: uuid,
+            userCode: val
+        }
+        strUser = JSON.stringify(user);
+        
+    }
+    else {
+        userFura = JSON.parse(userFura);
+        userFura.userCode = val;
+        strUser = JSON.stringify(userFura);
+    }
+    setCookie("userFura", strUser, 1);
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function generateUUID() {
+    var d = new Date().getTime();
+    if(Date.now){
+        d = Date.now(); //high-precision timer
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
+};
+*/
