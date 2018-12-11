@@ -32,7 +32,7 @@ async function connectDB(){
         db.on('connecting', onDbConnecting);
         db.on('error', console.error.bind(console, 'connection error:'));
         db.once('open', onDbConnected);
-        await mongoose.connect("mongodb://localhost/DB-fura");
+        await mongoose.connect("mongodb://mongo/DB-fura");
     }
     catch(err){
         console.log(err);
